@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+
+    <title>Contents</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            getGaesipan2();
+        })
+
+        // 게시글을 불러옵니다.
+        function getGaesipan2() {
+            $('#cards-box2').empty();
+
+            let id = location.href.split("id=")[1]; //localhost/detail.html?id=12
+
+
+
+            $.ajax({
+                type: "GET",
+                url: `/api/Gaesipans/${id}`,
+                data: {},
+                success: function (response) {
+                    let post = response;
+                    let id = post.id;
+                    let name = post.name;
+                    let title = post.title;
+                    let contents = post.contents;
+                    let modifiedAt = post.modifiedAt;
+                    let pw = post.pw;
+                    addHTML2(id, name, title, contents, modifiedAt, pw);
+                }
+            });
+        }
+
+        // 불러온 게시글을 html에 붙여줍니다.
+        function addHTML2(id, name, title, contents, modifiedAt, pw) {
+            let tempHtml2 = `<div class="card">
+
+                           <div id="${id}-name" class="name">
+                               ${name}
+                           </div>
+                           <div class="date">
+                               ${modifiedAt}
+                           </div>
+                           <div id="${id}-pw" class="pw">
+                               ${pw}
+                           </div>
+
+                    <h2 class='title' id="${id}-title">${title}</h2>
+                        <div class="contents" id="${id}-contents" >
+                           ${contents}
+                           </div>
+                        <button onclick="editOne('${id}')">글 수정하기</button>
+                        <button onclick="deleteOne('${id}')">글 삭제하기</button>
+                    </div>`;
+            $('#Gaesipan-one').append(tempHtml2);
+
+        }
+
+
+        function deleteOne(id) {
+
+            if (test(id) == false) {
+                window.location.reload();
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: `/api/Gaesipans/${id}`,
+                success: function (response) {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.href='index.html'
+                }
+            })
+        }
+
+        function editOne(id){
+
+            if (test(id) == false) {
+                window.location.reload();
+            }
+
+            window.location.href=`edit.html?id=${id}`;
+
+        }
+
+        function test(id) {
+            alert("pw를 입력하세요")
+            test = prompt("pw?")
+
+            let pw = $(`#${id}-pw`).text().trim();
+            if ( pw != test ){
+                alert("pw가 틀렸습니다")
+
+                return false;
+            }
+            alert("pw 확인 완료")
+            return true;
+        }
+
+
+    </script>
+</head>
+<body>
+<h1>"선택 게시글 보기"</h1>
+<button onclick="location.href='index.html'">돌아가기</button>
+
+
+<div class="Gaesipan-one" id="Gaesipan-one">
+<!--    <div class="card">-->
+
+<!--        <div id="${id}-name" class="name">-->
+<!--            ${name}-->
+<!--        </div>-->
+<!--        <div class="date">-->
+<!--            ${modifiedAt}-->
+<!--        </div>-->
+
+<!--        <h2 class='title' id="${id}-title">${title}</h2>-->
+<!--        <div class="contents" id="${id}-contents" >-->
+<!--            ${contents}-->
+<!--        </div>-->
+
+<!--    </div>-->
+</div>
+
+
+
+
+<div class="Gaesipan-comment" id="Gaesipan-comment">
+
+
+</div>
+
+</body>
+</html>

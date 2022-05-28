@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Title</title>
+
+
+    <script>
+
+
+        $(document).ready(function () {
+            // HTML 문서를 로드할 때마다 실행합니다.
+            getGaesipan();
+        })
+
+        // 메모를 불러와서 보여줍니다.
+        function getGaesipan() {
+            // 1. 기존 메모 내용을 지웁니다.
+            $('#Gaesipan-list').empty();
+            // 2. 메모 목록을 불러와서 HTML로 붙입니다.
+            $.ajax({
+                type: 'GET',
+                url: '/api/Gaesipans',
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        let Gae = response[i];
+                        let id = Gae['id'];
+                        let modifiedAt = Gae['modifiedAt'];
+                        let title = Gae['title'];
+
+
+                        addHTML(id, modifiedAt, title);
+                    }
+                }
+            })
+        }
+
+        // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
+        function addHTML(id, modifiedAt, title) {
+            // 1. HTML 태그를 만듭니다.
+            let tempHtml = `<div class="card">
+                                    <div class="modifiedAt">
+                                    <div id="${id}-modifiedAt" class="text">
+                                        ${modifiedAt}
+                                    </div>
+                                    </div>
+                                <div class="title">
+                                    <div id="${id}-title" class="text">
+                                       <a href="detail.html?id=${id}"> ${title}</a>
+                                    </div>
+                                </div>
+                            </div>`;
+            // 2. #cards-box 에 HTML을 붙인다.
+            $('#Gaesipan-list').append(tempHtml);
+        }
+
+
+
+    </script>
+</head>
+<body>
+<h1>"게시글 리스트"</h1>
+<button onclick="location.href='write.html'">글 쓰기</button>
+
+<div class="Gaesipan-list" id="Gaesipan-list">
+<!--    <div class="card">-->
+<!--        <div class="modifiedAt">-->
+<!--            <div id="${id}-modifiedAt" class="text">-->
+<!--                ${modifiedAt}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="title">-->
+<!--            <div id="${id}-title" class="text">-->
+<!--                <a href="detail.html?id=${id}"> ${title}</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+
+</body>
+</html>

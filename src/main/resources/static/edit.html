@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+
+    <title>Contents</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            getGaesipan2();
+        })
+
+        // 게시글을 불러옵니다.
+        function getGaesipan2() {
+            $('#cards-box2').empty();
+            let id = location.href.split("id=")[1]; //localhost/detail.html?id=12
+
+            $.ajax({
+                type: "GET",
+                url: `/api/Gaesipans/${id}`,
+                data: {},
+                success: function (response) {
+                    let post = response;
+                    let id = post.id;
+                    let name = post.name;
+                    let title = post.title;
+                    let contents = post.contents;
+                    let modifiedAt = post.modifiedAt;
+                    let pw = post.pw;
+                    addHTML2(id, name, title, contents, modifiedAt, pw);
+
+                }
+            });
+        }
+        // let contents = $(`#${id}-contents`).text().trim();
+        // let pw = $(`#${id}-pw`).text().trim();
+        // let title = $(`#${id}-title`).text().trim();
+        // let myname = $(`#${id}-myname`).text().trim();
+        // $(`#${id}-textarea4`).val(contents);
+        // $(`#${id}-textarea3`).val(pw);
+        // $(`#${id}-textarea2`).val(title);
+        // $(`#${id}-textarea1`).val(name);
+        // 불러온 게시글을 html에 붙여줍니다.
+        function addHTML2(id, name, title, contents, modifiedAt, pw) {
+
+
+            let tempHtml2 =     `<p>이름</p>
+                                <textarea id = "${id}-name">${name}</textarea>
+                                <p>제목</p>
+                                <textarea id = "${id}-title">${title}</textarea>
+                                <p>pw/비밀번호 분실시 게시물의 수정 및 삭제가 불가능 합니다</p>
+                                <textarea id = "${id}-pw">${pw}</textarea>
+                                <p>내용</p>
+                                <textarea id = "${id}-contents">${contents}</textarea>
+                                <button onclick="submitEdit('${id}')">글 수정하기</button>
+                                <button onclick="location.href='detail.html?id=${id}'">취소</button>
+                                `;
+            $('#Gaesipan-one').append(tempHtml2);
+
+        }
+
+
+        function submitEdit(id) {
+            // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
+
+            let contents = $(`#${id}-contents`).val().trim();
+            let name = $(`#${id}-name`).val().trim();
+            let title = $(`#${id}-title`).val().trim();
+            let pw = $(`#${id}-pw`).val().trim();
+
+            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+
+
+            // 3. 전달할 data JSON으로 만듭니다.
+            let data = {'contents': contents, 'name': name, 'title': title, 'pw': pw};
+
+            // 4. PUT /api/s/{id} 에 data를 전달합니다.
+            $.ajax({
+                type: "PUT",
+                url: `/api/Gaesipans/${id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지 변경에 성공하였습니다.');
+                    window.location.href='index.html';
+                }
+            });
+        }
+
+
+
+
+
+    </script>
+</head>
+<body>
+<h1>"선택 게시글 수정하기"</h1>
+
+
+
+<!--<p>이름</p>-->
+<!--<input id = "name" type="text" />-->
+<!--<p>제목</p>-->
+<!--<input id = "title" type="text" />-->
+<!--<p>pw/게시물 비밀번호 분실시 수정 삭제가 불가능 합니다</p>-->
+<!--<input id = "pw" type="text" />-->
+<!--<p>내용</p>-->
+<!--<textarea id = "contents"></textarea>-->
+
+<!--<button onclick="writePost()">글 올리기</button>-->
+
+
+<div class="Gaesipan-one" id="Gaesipan-one">
+    <!--    <div class="card">-->
+
+    <!--        <div id="${id}-name" class="name">-->
+    <!--            ${name}-->
+    <!--        </div>-->
+    <!--        <div class="date">-->
+    <!--            ${modifiedAt}-->
+    <!--        </div>-->
+
+    <!--        <h2 class='title' id="${id}-title">${title}</h2>-->
+    <!--        <div class="contents" id="${id}-contents" >-->
+    <!--            ${contents}-->
+    <!--        </div>-->
+
+    <!--    </div>-->
+</div>
+
+</body>
+</html>
