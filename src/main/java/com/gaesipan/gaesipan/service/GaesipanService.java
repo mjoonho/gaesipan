@@ -16,7 +16,7 @@ public class GaesipanService {
     private final GaesipanRepository gaesipanRepository;
 
     @Transactional
-    public Long update(Long id, GaesipanRequestDto requestDto) {
+    public long update(long id, GaesipanRequestDto requestDto) {
         Gaesipan gaesipan = gaesipanRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );

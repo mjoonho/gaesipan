@@ -7,11 +7,49 @@
     <title>Contents</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <style>
+        .text{
+            display: none;
+        }
+        .edit-button{
+            display: none;
+        }
+        .submit-button{
+            display: none;
+        }
+    </style>
     <script>
+
+
+        function isValidContents2(comment) {
+            if (comment == '') {
+                alert('내용을 입력해주세요');
+                return false;
+            }
+            if (comment.trim().length > 50) {
+                alert('공백 포함 50자 이하로 입력해주세요');
+                return false;
+            }
+            return true;
+        }
+
+        function genRandomName(length) {
+            let id = location.href.split("id=")[1];
+            let result = '';
+            let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                let number = Math.random() * charactersLength;
+                let index = Math.floor(number);
+                result += characters.charAt(index);
+            }
+            return id + "/" + result + new Date().getTime();
+        }
+
         $(document).ready(function () {
 
             getGaesipan2();
+            getComment();
         })
 
         // 게시글을 불러옵니다.
@@ -19,8 +57,6 @@
             $('#cards-box2').empty();
 
             let id = location.href.split("id=")[1]; //localhost/detail.html?id=12
-
-
 
             $.ajax({
                 type: "GET",
@@ -92,7 +128,7 @@
         }
 
         function test(id) {
-            alert("pw를 입력하세요")
+            alert("게시글pw를 입력하세요")
             test = prompt("pw?")
 
             let pw = $(`#${id}-pw`).text().trim();
@@ -103,6 +139,190 @@
             }
             alert("pw 확인 완료")
             return true;
+        }
+
+        function test2(idC) {
+            alert("댓글pw를 입력하세요")
+            test = prompt("pw?")
+
+            let cpw = $(`#${idC}-cpw`).text().trim();
+            if ( cpw != test ){
+                alert("pw가 틀렸습니다")
+
+                return false;
+            }
+            alert("pw 확인 완료")
+            return true;
+        }
+
+
+        function writeComment(){
+            let id = location.href.split("id=")[1];
+
+            let comment = $('#comment').val();
+            let cname = $('#cname').val();
+            let cpw = $('#cpw').val();
+            let cid = genRandomName(10);
+
+
+            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            if (isValidContents2(comment) == false) {
+                return;
+            }
+            // 3. genRandomName 함수를 통해 익명의 username을 만듭니다.
+
+            // 4. 전달할 data JSON으로 만듭니다.
+            let data = {'cname': cname, 'comment': comment, 'cpw': cpw, 'cid': cid , 'id': id};
+            // 5. POST /api/boards 에 data를 전달합니다.
+            $.ajax({
+                type: "POST",
+                url: '/api/Comments',
+                contentType: "application/json", // JSON 형식으로 전달함을 알리기
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    window.location.reload();
+                }
+            });
+        }
+
+        function getComment() {
+            $('#comment-box').empty();
+
+
+
+            $.ajax({
+                type: "GET",
+                url: `/api/Comments`,
+                data: {},
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        let idd = location.href.split("id=")[1];
+
+                        let post = response[i];
+                        let id = post['id'];
+                        let cname = post['cname'];
+                        let comment = post['comment'];
+                        let modifiedAt = post.modifiedAt;
+                        let cpw = post['cpw'];
+                        let cid = post['cid'];
+                        let idC = post['idC'];
+                        if (idd == id){
+                            addHTML3(id, cname, comment, modifiedAt, cpw, cid, idC);
+                        }
+
+                    }
+                }
+            });
+        }
+
+        // 불러온 게시글을 html에 붙여줍니다.
+        function addHTML3(id, cname,  comment, modifiedAt, cpw, cid, idC) {
+
+            let tempHtml3 = `<div class="comment-card">
+                            <div id="${idC}-id" class="id">
+                                ${id}
+                            </div>
+
+                           <div id="${idC}-cname" class="cname">
+                               ${cname}
+                           </div>
+
+                           <div class="date">
+                               ${modifiedAt}
+                           </div>
+
+                           <div class="comment-pw"
+                           <div id="${idC}-cpw" class="cpw">
+                               ${cpw}
+                           </div>
+                               <div id="${idC}-editarea-cpw" class="text">
+                                    <textarea id="${idC}-textarea1" class="te-edit1" name="" id="" cols="30" rows="5"></textarea>
+                               </div>
+                           </div>
+
+                           <div class="comment" id="${idC}-comment">
+                                ${comment}
+                           </div>
+                           <div id="${idC}-editarea-comment" class="text">
+                                <textarea id="${idC}-textarea2" class="te-edi2t" name="" id="" cols="30" rows="5"></textarea>
+                           </div>
+                        <button id="${idC}-EDIT-button" onclick="editComment('${idC}')">댓글 수정하기</button>
+                        <button id="${idC}-delete-button" onclick="deleteComment('${idC}')">댓글 삭제하기</button>
+                        <button class="submit-button" id="${idC}-submit-button" onclick="submitComment('${idC}')">수정</button>
+                        <button class="edit-button" id="${idC}-edit-button" onclick="location.reload()">취소</button>
+                        </div>`;
+            $('#comment-box').append(tempHtml3);
+        }
+
+        function deleteComment(idC) {
+
+            let id = location.href.split("id=")[1];
+
+            if (test2(idC) == false) {
+                window.location.href=`detail.html?id=${id}`;
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: `/api/Comments/${idC}`,
+                success: function (response) {
+                    alert('댓글 삭제에 성공하였습니다.');
+                    window.location.href=`detail.html?id=${id}`;
+                }
+            })
+        }
+
+        function editComment(idC) {
+
+            let id = location.href.split("id=")[1];
+            if (test2(idC) == false) {
+                window.location.href=`detail.html?id=${id}`;
+            }
+            showEdits(idC);
+            let comment = $(`#${idC}-comment`).text().trim();
+            let cpw = $(`#${idC}-cpw`).text().trim();
+            $(`#${idC}-textarea2`).val(comment);
+            $(`#${idC}-textarea1`).val(cpw);
+
+        }
+
+        function showEdits(idC) {
+            $(`#${idC}-editarea-cpw`).show();
+            $(`#${idC}-editarea-comment`).show();
+            $(`#${idC}-submit-button`).show();
+            $(`#${idC}-edit-button`).show();
+            $(`#${idC}-delete-button`).hide();
+            $(`#${idC}-EDIT-button`).hide();
+        }
+
+        // 메모를 수정합니다.
+        function submitComment(idC) {
+            // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
+            let id = $(`#${idC}-id`).text().trim();
+            let cname = $(`#${idC}-cname`).text().trim();
+            let cid = $(`#${idC}-cid`).text().trim();
+            let comment = $(`#${idC}-textarea2`).val().trim();
+            let cpw = $(`#${idC}-textarea1`).val().trim();
+
+            if (isValidContents2(comment) == false) {
+                return;
+            }
+
+            // 3. 전달할 data JSON으로 만듭니다.
+            let data = {'comment': comment,'cpw': cpw, 'idC':idC,'id':id, 'cname': cname, 'cid': cid};
+
+            // 4. PUT /api/s/{id} 에 data를 전달합니다.
+            $.ajax({
+                type: "PUT",
+                url: `/api/Comments/${idC}`,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('댓글 수정에 성공하였습니다.');
+                    window.location.reload();
+                }
+            });
         }
 
 
@@ -134,7 +354,20 @@
 
 
 
-<div class="Gaesipan-comment" id="Gaesipan-comment">
+<div class="write-comment" id="write-comment">
+    <h3>댓글 달기</h3>
+    <p>이름</p>
+    <input id = "cname" type="text" />
+    <p>pw/댓글 비밀번호 분실시 수정 삭제가 불가능 합니다</p>
+    <input id = "cpw" type="text" />
+    <p>내용</p>
+    <textarea id = "comment"></textarea>
+
+    <button onclick="writeComment()">댓글 올리기</button>
+</div>
+
+
+<div class="comment-box" id="comment-box">
 
 
 </div>
