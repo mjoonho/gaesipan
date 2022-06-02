@@ -1,6 +1,8 @@
 package com.gaesipan.gaesipan.controller;
 
-import com.gaesipan.gaesipan.domain.*;
+import com.gaesipan.gaesipan.domain.comment.Comment;
+import com.gaesipan.gaesipan.domain.comment.CommentRepository;
+import com.gaesipan.gaesipan.domain.comment.CommentRequestDto;
 import com.gaesipan.gaesipan.service.CommentService;
 
 import lombok.RequiredArgsConstructor;

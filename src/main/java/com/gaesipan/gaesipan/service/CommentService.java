@@ -1,8 +1,8 @@
 package com.gaesipan.gaesipan.service;
 
-import com.gaesipan.gaesipan.domain.Comment;
-import com.gaesipan.gaesipan.domain.CommentRepository;
-import com.gaesipan.gaesipan.domain.CommentRequestDto;
+import com.gaesipan.gaesipan.domain.comment.Comment;
+import com.gaesipan.gaesipan.domain.comment.CommentRepository;
+import com.gaesipan.gaesipan.domain.comment.CommentRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;

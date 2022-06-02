@@ -1,8 +1,8 @@
 package com.gaesipan.gaesipan.controller;
 
-import com.gaesipan.gaesipan.domain.Gaesipan;
-import com.gaesipan.gaesipan.domain.GaesipanRepository;
-import com.gaesipan.gaesipan.domain.GaesipanRequestDto;
+import com.gaesipan.gaesipan.domain.gaesipan.Gaesipan;
+import com.gaesipan.gaesipan.domain.gaesipan.GaesipanRepository;
+import com.gaesipan.gaesipan.domain.gaesipan.GaesipanRequestDto;
 import com.gaesipan.gaesipan.service.GaesipanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

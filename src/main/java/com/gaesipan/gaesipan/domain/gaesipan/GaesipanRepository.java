@@ -1,4 +1,4 @@
-package com.gaesipan.gaesipan.domain;
+package com.gaesipan.gaesipan.domain.gaesipan;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
