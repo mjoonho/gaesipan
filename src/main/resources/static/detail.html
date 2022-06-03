@@ -105,16 +105,19 @@
 
             if (test(id) == false) {
                 window.location.reload();
-            }
+            }else {
+                deleteCommnets(id);
 
-            $.ajax({
-                type: "DELETE",
-                url: `/api/Gaesipans/${id}`,
-                success: function (response) {
-                    alert('메시지 삭제에 성공하였습니다.');
-                    window.location.href='index.html'
-                }
-            })
+                $.ajax({
+                    type: "DELETE",
+                    url: `/api/Gaesipans/${id}`,
+                    success: function (response) {
+                        alert('메시지 삭제에 성공하였습니다.');
+                        window.location.href='index.html'
+                    }
+                })
+
+            }
         }
 
         function editOne(id){
@@ -321,6 +324,31 @@
                 success: function (response) {
                     alert('댓글 수정에 성공하였습니다.');
                     window.location.reload();
+                }
+            });
+        }
+
+        function deleteCommnets(id) {
+
+            $.ajax({
+                type: "GET",
+                url: `/api/Comments/${id}`,
+                data: {},
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+
+                        let post = response[i];
+                        let idC = post['idC'];
+
+                        $.ajax({
+                            type: "DELETE",
+                            url: `/api/Comments/${idC}`,
+                            success: function (response) {
+
+                            }
+                        })
+
+                    }
                 }
             });
         }
