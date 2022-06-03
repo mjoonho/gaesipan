@@ -189,15 +189,15 @@
         function getComment() {
             $('#comment-box').empty();
 
-
+            let id = location.href.split("id=")[1];
 
             $.ajax({
                 type: "GET",
-                url: `/api/Comments`,
+                url: `/api/Comments/${id}`,
                 data: {},
                 success: function (response) {
                     for (let i = 0; i < response.length; i++) {
-                        let idd = location.href.split("id=")[1];
+
 
                         let post = response[i];
                         let id = post['id'];
@@ -207,9 +207,9 @@
                         let cpw = post['cpw'];
                         let cid = post['cid'];
                         let idC = post['idC'];
-                        if (idd == id){
-                            addHTML3(id, cname, comment, modifiedAt, cpw, cid, idC);
-                        }
+
+                        addHTML3(id, cname, comment, modifiedAt, cpw, cid, idC);
+
 
                     }
                 }
