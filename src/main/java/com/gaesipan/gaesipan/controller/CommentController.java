@@ -7,8 +7,7 @@ import com.gaesipan.gaesipan.domain.comment.CommentRequestDto;
 import com.gaesipan.gaesipan.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +45,8 @@ public class CommentController {
 }
 
 
-
+//    import org.springframework.context.annotation.Bean;
+//    import org.springframework.context.annotation.Configuration;
 //@Configuration 참고용인데 어디다 저장할지 몰라서 그냥 여기다가 넣음
 //@EnableWebSecurity
 //public class SecurityConfiguration {
