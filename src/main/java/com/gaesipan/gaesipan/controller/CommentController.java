@@ -29,8 +29,6 @@ public class CommentController {
 
     }
 
-
-
     @PutMapping("/api/Comments/{idC}")
     public Long updateComment(@PathVariable Long idC, @RequestBody CommentRequestDto requestDto){
         commentService.update(idC, requestDto);
